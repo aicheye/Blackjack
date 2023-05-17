@@ -40,11 +40,11 @@ class Card:
     def __str__(self):
         return f"{self.name} of {self.suit}"
 
-    def genCardArt(self, shown):
+    def gen_card_art(self, shown):
         suits = {"Spades": "♠", "Diamonds": "♢", "Clubs": "♣", "Hearts": "♡"}
         if self.name != "10":
             icon = self.name[0]
-            shownCard = f"""┌───────┐
+            front = f"""┌───────┐
 │ {icon}     │
 │       │
 │   {suits[self.suit]}   │
@@ -53,14 +53,14 @@ class Card:
 └───────┘"""
         else:
             icon = self.name
-            shownCard = f"""┌───────┐
+            front = f"""┌───────┐
 │ {icon}    │
 │       │
 │   {suits[self.suit]}   │
 │       │
 │    {icon} │
 └───────┘"""
-        hiddenCard = """┌───────┐
+        back = """┌───────┐
 │░░░░░░░│
 │░░░░░░░│
 │░░░░░░░│
@@ -68,9 +68,9 @@ class Card:
 │░░░░░░░│
 └───────┘"""
         if shown:
-            return shownCard
+            return front
         if not shown:
-            return hiddenCard
+            return back
 
 
 class Deck:
@@ -93,20 +93,20 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.stack)
 
-    def drawCard(self):
+    def draw_card(self):
         if len(self.stack) == 0:
             raise IndexError("There are no more cards in the deck.")
         taken = self.stack.pop()
         self.cards[taken.suit][taken.number - 1] -= 1
         return taken
 
-    def insertCard(self, card):
+    def insert_card(self, card):
         if self.stack.count(card) > self.packs:
             raise ValueError(f"A card cannot occur more than {self.packs} time(s) within this deck.")
         self.stack.insert(0, card)
         self.cards[card.suit][card.number - 1] += 1
 
-    def isComplete(self):
+    def is_complete(self):
         suits = ["Spades", "Diamonds", "Clubs", "Hearts"]
         for s in suits:
             for n in range(13):
@@ -123,34 +123,34 @@ class Hand:
     def __str__(self):
         return str([str(c) for c in self.cards])
 
-    def addCard(self, c, s):
+    def add_card(self, c):
         self.cards.append(c)
         self.shown = []
 
-    def takeCard(self, d, s):
-        newCard = d.drawCard()
-        self.cards.append(newCard)
+    def take_card(self, d, s):
+        new = d.draw_card()
+        self.cards.append(new)
         self.shown.append(True) if s else self.shown.append(False)
 
-    def returnCard(self, d, c):
+    def return_card(self, d, c):
         i = self.cards.index(c)
         self.cards.remove(c)
         self.shown.pop(i)
-        d.insertCard(c)
+        d.insert_card(c)
 
-    def clearHand(self, d):
+    def clear_hand(self, d):
         for c in self.cards:
-            d.insertCard(c)
+            d.insert_card(c)
         self.cards = []
         self.shown = []
 
-    def showCards(self):
+    def show_cards(self):
         for n, c in enumerate(self.cards):
             if not self.shown[n]:
                 self.shown[n] = True
         self.shown = [True] * len(self.cards)
 
-    def getHandValue(self):
+    def get_hand_value(self):
         aces = 0
         v = 0
         for c in self.cards:
@@ -165,14 +165,14 @@ class Hand:
             aces -= 1
         return v
 
-    def genHandArt(self):
-        cardArts = []
+    def gen_art(self):
+        arts = []
         for n, c in enumerate(self.cards):
-            cardArts.append(c.genCardArt(self.shown[n]).split("\n"))
+            arts.append(c.gen_card_art(self.shown[n]).split("\n"))
         art = ""
-        for line in range(len(cardArts[0])):
-            for c in cardArts:
+        for line in range(len(arts[0])):
+            for c in arts:
                 art += c[line]
                 art += " "
-            art += "\n" if line != len(cardArts[0]) - 1 else ""
+            art += "\n" if line != len(arts[0]) - 1 else ""
         return art

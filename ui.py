@@ -2,32 +2,32 @@ import json
 import os
 
 
-def getBank():
+def get_bank():
     with open("data.json", "r") as read_file:
         return json.load(read_file)["bank"]
 
 
-def getBet():
+def get_bet():
     with open("data.json", "r") as read_file:
         return json.load(read_file)["bet"]
 
 
-def getDealerHandArt():
+def get_dealer_hand_art():
     with open("hands.json", "r") as read_file:
         return json.load(read_file)["dealerHand"]["art"]
 
 
-def getDealerHandVal():
+def get_dealer_hand_value():
     with open("hands.json", "r") as read_file:
         return json.load(read_file)["dealerHand"]["value"]
 
 
-def getPlayerHandArt():
+def get_player_hand_art():
     with open("hands.json", "r") as read_file:
         return json.load(read_file)["playerHand"]["art"]
 
 
-def getPlayerHandVal():
+def get_player_hand_value():
     with open("hands.json", "r") as read_file:
         return json.load(read_file)["playerHand"]["value"]
 
@@ -60,6 +60,12 @@ def display(content, instructions=None):
     print(screen, end="")
 
 
+prompt_Bet = "What is your bet on this round?"
+prompt_Dismiss = "Press enter to continue"
+prompt_Initial = "Would you like to (s)urrender, buy (i)nsurance, (d)ouble down or (c)ontinue?"
+prompt_Default = "Would you like to (h)it or (s)tand?"
+
+
 table_Default = ""
 table_DealerShown = ""
 table_PlayerWon = ""
@@ -72,7 +78,7 @@ alert_InsuranceSucceeded = ""
 alert_InsuranceFailed = ""
 alert_DoubleDown = ""
 alert_DoubleDownAllIn = ""
-alert_DoubleDownImpossible = ""
+alert_DoubleDownFailed = ""
 loss_PlayerBusted = ""
 loss_PlayerWorseHand = ""
 win_PlayerBlackjack = ""
@@ -94,7 +100,7 @@ def refresh():
     global alert_InsuranceFailed
     global alert_DoubleDown
     global alert_DoubleDownAllIn
-    global alert_DoubleDownImpossible
+    global alert_DoubleDownFailed
     global loss_PlayerBusted
     global table_PlayerBlackjack
     global win_PlayerBlackjack
@@ -104,37 +110,37 @@ def refresh():
     global win_PlayerBetterHand
     global tie_SameHand
     table_Default = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-Your Balance: ${getBank():0,.2f}
-Your Bet: ${getBet():0,.2f}
+Your Balance: ${get_bank() :0,.2f}
+Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
 Dealer's Hand:
-{getDealerHandArt()}
+{get_dealer_hand_art()}
 
-Your Hand (value: {getPlayerHandVal()}):
-{getPlayerHandArt()}"""
+Your Hand (value: {get_player_hand_value()}):
+{get_player_hand_art()}"""
 
     table_DealerShown = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-Your Balance: ${getBank():0,.2f}
-Your Bet: ${getBet():0,.2f}
+Your Balance: ${get_bank() :0,.2f}
+Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
-Dealer's Hand (value: {getDealerHandVal()}):
-{getDealerHandArt()}
+Dealer's Hand (value: {get_dealer_hand_value()}):
+{get_dealer_hand_art()}
 
-Your Hand (value: {getPlayerHandVal()}):
-{getPlayerHandArt()}"""
+Your Hand (value: {get_player_hand_value()}):
+{get_player_hand_art()}"""
 
     table_PlayerWon = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-Your Balance: ${getBank():0,.2f} (+ ${getBet() * 1.5:0,.2f})
-Your Bet: ${getBet():0,.2f}
+Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() * 1.5:0,.2f})
+Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
-Dealer's Hand (value: {getDealerHandVal()}):
-{getDealerHandArt()}
+Dealer's Hand (value: {get_dealer_hand_value()}):
+{get_dealer_hand_art()}
 
-Your Hand (value: {getPlayerHandVal()}):
-{getPlayerHandArt()}
+Your Hand (value: {get_player_hand_value()}):
+{get_player_hand_art()}
 
 ░▒█░░▒█░▒█▀▀▀█░▒█░▒█░░░▒█░░▒█░▀█▀░▒█▄░▒█░█
 ░▒▀▄▄▄▀░▒█░░▒█░▒█░▒█░░░▒█▒█▒█░▒█░░▒█▒█▒█░▀
@@ -158,11 +164,11 @@ You're BROKE! Try making an appointment at Gamblers Anonymous...
 Maybe Blackjack isn't for you!"""
 
     welcome = f"""Welcome to Blackjack!
-Your current balance is: ${getBank():0,.2f}"""
+Your current balance is: ${get_bank() :0,.2f}"""
 
     alert_AllIn = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 Your Balance: $0.00
-Your Bet: ${getBet():0,.2f}
+Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
 
@@ -175,16 +181,16 @@ Your Bet: ${getBet():0,.2f}
 
 You're all in on this hand! Play wisely!"""
 
-    alert_Surrender = f"""You got half of your initial bet back (${getBet() / 2:0,.2f}).
+    alert_Surrender = f"""You got half of your initial bet back (${get_bet() / 2:0,.2f}).
 Thanks for playing, better luck next time!"""
 
     alert_InsuranceSucceeded = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-Your Balance: ${getBank():0,.2f} (+ ${getBet() * 2:0,.2f})
-Your Bet: ${getBet():0,.2f}
+Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() * 2:0,.2f})
+Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
-Dealer's Hand (value: {getDealerHandVal}):
-{getDealerHandArt}
+Dealer's Hand (value: {get_dealer_hand_value}):
+{get_dealer_hand_art}
 
 ░██▄░█▒░▒▄▀▄░▄▀▀░█▄▀░░▒█▒▄▀▄░▄▀▀░█▄▀░█
 ▒█▄█▒█▄▄░█▀█░▀▄▄░█▒█░▀▄█░█▀█░▀▄▄░█▒█░▄
@@ -194,8 +200,8 @@ Because you bought insurance, you get all your money back."""
 You lost your insurance money!"""
 
     alert_DoubleDown = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-Your Balance: ${getBank():0,.2f} (-${getBet():0,.2f})
-Your Bet: ${getBet():0,.2f} (x2)
+Your Balance: ${get_bank() :0,.2f} (-${get_bet() :0,.2f})
+Your Bet: ${get_bet() :0,.2f} (x2)
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
 ╔═══╗╔═══╗╔╗ ╔╗╔══╗ ╔╗   ╔═══╗    ╔═══╗╔═══╗╔╗╔╗╔╗╔═╗ ╔╗╔╗
@@ -209,7 +215,7 @@ DOUBLE DOWN! You must be confident in this hand."""
 
     alert_DoubleDownAllIn = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 Your Balance: $0.00
-Your Bet: ${getBet():0,.2f} (+ ${getBank():0,.2f})
+Your Bet: ${get_bet() :0,.2f} (+ ${get_bank() :0,.2f})
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
 
@@ -222,7 +228,7 @@ Your Bet: ${getBet():0,.2f} (+ ${getBank():0,.2f})
 
 You're all in on this hand! Play wisely!"""
 
-    alert_DoubleDownImpossible = "You don't have enough money to double down on this hand!"
+    alert_DoubleDownFailed = "You don't have enough money to double down on this hand!"
 
     loss_PlayerBusted = f"""{table_DealerShown}
 
@@ -266,15 +272,15 @@ Better luck next time!"""
 You win! Your hand was better than the dealer!"""
 
     tie_SameHand = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-Your Balance: ${getBank():0,.2f} (+ ${getBet():0,.2f})
-Your Bet: ${getBet():0,.2f}
+Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() :0,.2f})
+Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
-Dealer's Hand (value: {getDealerHandVal()}):
-{getDealerHandArt()}
+Dealer's Hand (value: {get_dealer_hand_value()}):
+{get_dealer_hand_art()}
 
-Your Hand (value: {getPlayerHandVal()}):
-{getPlayerHandArt()}
+Your Hand (value: {get_player_hand_value()}):
+{get_player_hand_art()}
 
 __ __|_)        |
    |   |   _ \  |
