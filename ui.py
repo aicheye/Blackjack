@@ -1,14 +1,13 @@
 import json
 import os
-import selector
-import centeredinputs
+import inputhandler
 
 minWidth = 55
 cols = minWidth
 
 
 def clear():
-    os.system("clear")
+    os.system("cls")
 
 
 def load():
@@ -50,16 +49,13 @@ def get_player_hand_value():
 
 
 selected = ""
-user_in = ""
 
 
 def display(content, instructions=None):
-    sel = False
+    selector = False
     if type(instructions) is list:
-        sel = True
-
+        selector = True
     global selected
-    global user_in
 
     clear()
 
@@ -93,27 +89,19 @@ def display(content, instructions=None):
 
     screen += "║" + " " * (cols - 2) + "║\n"
 
-    if instructions is None:
+    if not selector:
         screen += "╚" + "═" * (cols - 2) + "╝"
 
-    elif instructions is not None and not sel:
-        centeredinputs.instructions = instructions
-        centeredinputs.input_field = ""
-        centeredinputs.user_in = ""
+    if instructions is not None and not selector:
+        screen += f"\n{instructions}\n> "
+        print(screen, end="")
+    elif instructions is not None and selector:
+        inputhandler.options = instructions
+        inputhandler.cursor_position = 0
         while True:
             clear()
             print(screen, end="")
-            if centeredinputs.main(cols):
-                user_in = centeredinputs.user_in
-                break
-
-    elif instructions is not None and sel:
-        selector.options = instructions
-        selector.cursor_position = 0
-        while True:
-            clear()
-            print(screen, end="")
-            selected = selector.main(cols)
+            selected = inputhandler.main(cols)
             if selected in instructions:
                 break
     else:
@@ -121,7 +109,7 @@ def display(content, instructions=None):
 
 
 prompt_TutorialStart = ["BEGIN tutorial", "SKIP"]
-prompt_Bet = "Enter your bet:"
+prompt_Bet = "What is your bet on this round?"
 prompt_Dismiss = ["CONTINUE"]
 prompt_Initial = ["SURRENDER", "DOUBLE DOWN", "CONTINUE"]
 prompt_InitialWithInsurance = ["SURRENDER", "BUY INSURANCE", "DOUBLE DOWN", "CONTINUE"]
