@@ -6,6 +6,10 @@ minWidth = 55
 cols = minWidth
 
 
+def clear():
+    os.system("clear")
+
+
 def load():
     global cols
     with open("sys.json", "r") as read_file:
@@ -42,10 +46,6 @@ def get_player_hand_art():
 def get_player_hand_value():
     with open("hands.json", "r") as read_file:
         return json.load(read_file)["playerHand"]["value"]
-
-
-def clear():
-    os.system("clear")
 
 
 selected = ""
