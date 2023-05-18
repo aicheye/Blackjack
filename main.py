@@ -8,8 +8,13 @@ import tutorial
 size = os.get_terminal_size()
 cols = size.columns
 
-with open("sys.json", "w") as write_file:
-    json.dump({"cols": cols}, write_file, indent=2)
+
+def update_sys():
+    with open("sys.json", "w") as write_file:
+        json.dump({"cols": cols}, write_file, indent=2)
+
+
+update_sys()
 
 ui.load()
 
@@ -81,7 +86,7 @@ if __name__ == "__main__":
                 playing = False
                 break
             ui.display(ui.welcome, ui.prompt_Bet)
-            bet = input()
+            bet = ui.user_in
             try:
                 float(bet)
             except ValueError:
