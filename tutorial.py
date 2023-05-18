@@ -3,6 +3,7 @@ import ui
 
 ui.load()
 
+
 def begin():
     deck = cards.Deck()
     deck.shuffle()
