@@ -54,12 +54,14 @@ user_in = ""
 
 
 def display(content, instructions=None):
+    global selected
+    global user_in
+
+    container_width = cols if cols < 100 else 100
+
     sel = False
     if type(instructions) is list:
         sel = True
-
-    global selected
-    global user_in
 
     clear()
 
@@ -83,18 +85,18 @@ def display(content, instructions=None):
     for line in title.splitlines():
         screen += line.center(cols) + "\n"
 
-    screen += "╔" + "═" * (cols - 2) + "╗" + "\n" + \
-              "║" + " " * (cols - 2) + "║" + "\n"
+    screen += ("╔" + "═" * (container_width - 2) + "╗").center(cols) + "\n" + \
+              ("║" + " " * (container_width - 2) + "║").center(cols) + "\n"
 
     for line in content.splitlines():
-        screen += "║"
-        screen += line.center(cols - 2)
-        screen += "║\n"
+        screen += ("║" + line.center(container_width - 2) + "║").center(cols) + "\n"
 
-    screen += "║" + " " * (cols - 2) + "║\n"
+    screen += ("║" + " " * (container_width - 2) + "║").center(cols) + "\n"
 
     if instructions is None:
-        screen += "╚" + "═" * (cols - 2) + "╝"
+        screen += "╚" + "═" * (container_width - 2) + "╝"
+        print(screen, end="")
+
 
     elif instructions is not None and not sel:
         centeredinputs.instructions = instructions
@@ -103,6 +105,7 @@ def display(content, instructions=None):
         while True:
             clear()
             print(screen, end="")
+            print(("╚" + ("╤" + "═" * 21 + "╤").center(container_width - 2, "═") + "╝").center(cols))
             if centeredinputs.main(cols):
                 user_in = centeredinputs.user_in
                 break
@@ -113,11 +116,10 @@ def display(content, instructions=None):
         while True:
             clear()
             print(screen, end="")
+            print(("╚" + ("╤" + "═" * 21 + "╤").center(container_width - 2, "═") + "╝").center(cols))
             selected = selector.main(cols)
             if selected in instructions:
                 break
-    else:
-        print(screen)
 
 
 prompt_TutorialStart = ["BEGIN tutorial", "SKIP"]
@@ -174,6 +176,7 @@ def refresh():
 Your Balance: ${get_bank() :0,.2f}
 Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+
 Dealer's Hand:
 {get_dealer_hand_art()}
 
@@ -184,6 +187,7 @@ Your Hand (value: {get_player_hand_value()}):
 Your Balance: ${get_bank() :0,.2f}
 Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+
 Dealer's Hand (value: {get_dealer_hand_value()}):
 {get_dealer_hand_art()}
 
@@ -194,6 +198,7 @@ Your Hand (value: {get_player_hand_value()}):
 Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() * 1.5:0,.2f})
 Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+
 Dealer's Hand (value: {get_dealer_hand_value()}):
 {get_dealer_hand_art()}
 Your Hand (value: {get_player_hand_value()}):
@@ -228,6 +233,7 @@ Your Balance: $0.00
 Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
+
 ░█████╗░██╗░░░░░██╗░░░░░  ██╗███╗░░██╗██╗██╗██╗
 ██╔══██╗██║░░░░░██║░░░░░  ██║████╗░██║██║██║██║
 ███████║██║░░░░░██║░░░░░  ██║██╔██╗██║██║██║██║
@@ -244,6 +250,7 @@ Thanks for playing, better luck next time!"""
 Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() * 2:0,.2f})
 Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+
 Dealer's Hand (value: {get_dealer_hand_value}):
 {get_dealer_hand_art}
 
@@ -300,11 +307,26 @@ Better luck next time!"""
 ░██▄░█▒░▒▄▀▄░▄▀▀░█▄▀░░▒█▒▄▀▄░▄▀▀░█▄▀░█
 ▒█▄█▒█▄▄░█▀█░▀▄▄░█▒█░▀▄█░█▀█░▀▄▄░█▒█░▄"""
 
-    win_PlayerBlackjack = f"""{table_PlayerBlackjack}
+    win_PlayerBlackjack = f"""{table_PlayerWon}
+
+░██▄░█▒░▒▄▀▄░▄▀▀░█▄▀░░▒█▒▄▀▄░▄▀▀░█▄▀░█
+▒█▄█▒█▄▄░█▀█░▀▄▄░█▒█░▀▄█░█▀█░▀▄▄░█▒█░▄
 
 CONGRATULATIONS! You won this round!"""
 
-    tie_PlayerBlackjack = f"""{table_PlayerBlackjack}
+    tie_PlayerBlackjack = f"""┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() :0,.2f})
+Your Bet: ${get_bet() :0,.2f}
+┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+
+Dealer's Hand (value: {get_dealer_hand_value()}):
+{get_dealer_hand_art()}
+
+Your Hand (value: {get_player_hand_value()}):
+{get_player_hand_art()}
+
+░██▄░█▒░▒▄▀▄░▄▀▀░█▄▀░░▒█▒▄▀▄░▄▀▀░█▄▀░█
+▒█▄█▒█▄▄░█▀█░▀▄▄░█▒█░▀▄█░█▀█░▀▄▄░█▒█░▄
 
 It's a tie! Both you and the dealer got Blackjack!
 Your bet has been returned."""
@@ -329,6 +351,7 @@ You win! Your hand was better than the dealer!"""
 Your Balance: ${get_bank() :0,.2f} (+ ${get_bet() :0,.2f})
 Your Bet: ${get_bet() :0,.2f}
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+
 Dealer's Hand (value: {get_dealer_hand_value()}):
 {get_dealer_hand_art()}
 

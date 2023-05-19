@@ -18,7 +18,8 @@ def begin():
     dealerHand.take_card(deck, False)
     playerHand.take_card(deck, True)
 
-    ui.display("Welcome to the tutorial!", ui.prompt_TutorialStart)
+    ui.display("""Welcome to the tutorial!
+or SKIP if you already know how to play Blackjack""", ui.prompt_TutorialStart)
     choice = ui.selected[0]
     if choice == "S":
         return

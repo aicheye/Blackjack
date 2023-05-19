@@ -5,7 +5,6 @@ cursor_position = 0
 
 
 def display_options(cols):
-    print("╚" + ("╤" + "═" * 21 + "╤").center(cols - 2, "═") + "╝")
     for i, option in enumerate(options):
         if i == cursor_position:
             print(("│ ⮞" + f"─{option}─".center(17) + "⮜ │").center(cols))
