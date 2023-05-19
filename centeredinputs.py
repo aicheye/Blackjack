@@ -21,7 +21,8 @@ def main(cols):
     if key == readchar.key.ENTER:
         user_in = input_field
         return True
-    elif key == "\x08":  # Backspace key
+    elif key == readchar.key.BACKSPACE:  # Backspace key
+        print(input_field)
         input_field = input_field[:-1]
     elif len(input_field) < 15:
         input_field += key
