@@ -123,9 +123,9 @@ class Hand:
     def __str__(self):
         return str([str(c) for c in self.cards])
 
-    def add_card(self, c):
+    def add_card(self, c, s):
         self.cards.append(c)
-        self.shown = []
+        self.shown.append(True) if s else self.shown.append(False)
 
     def take_card(self, d, s):
         new = d.draw_card()
@@ -169,6 +169,10 @@ class Hand:
         arts = []
         for n, c in enumerate(self.cards):
             arts.append(c.gen_card_art(self.shown[n]).split("\n"))
+
+        if not arts:
+            return ""
+
         art = ""
         for line in range(len(arts[0])):
             for c in arts:
