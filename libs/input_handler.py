@@ -1,5 +1,4 @@
 import readchar
-import libs.ui as ui
 
 input_field = ""
 instructions = ""
@@ -32,8 +31,6 @@ def main(cols):
     global input_field
     global instructions
     global user_in
-
-    display = ""
 
     try:
         int(input_field)

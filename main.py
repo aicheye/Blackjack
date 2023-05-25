@@ -275,18 +275,15 @@ def main():
     rounds = 0
 
     update()
-    stop = False
-    if not stop:
-        running = True
+
+    running = True
     while running:
         if bank == 0:
             stats["profit"] -= 10_000
             update()
             ui.display(ui.broke, ui.prompt_Dismiss)
             if deposit() == "exit":
-                running = False
-                stop = True
-                break
+                return
 
         if rounds > 0 and (disabledTimer == 0 or disabledTimer > 4):
             ui.display(ui.cash_out, ui.prompt_CashOut)
@@ -295,9 +292,7 @@ def main():
                 stats["profit"] += bank - 10_000
                 update()
                 if deposit() == "exit":
-                    running = False
-                    stop = True
-                    break
+                    return
             elif choice == "I":
                 disabledTimer = 1
 
